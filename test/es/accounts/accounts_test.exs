@@ -81,4 +81,46 @@ defmodule Es.AccountsTest do
       assert account.balance == initial_balance - 500
     end
   end
+
+  describe "withdrawal stats" do
+    @tag :integration
+    test "should be created when account is created" do
+      params = build(:account)
+      assert {:ok, %Account{} = account} = Accounts.create_account(params)
+
+      stat = Accounts.withdrawal_stats_by_account_number(account.account_number)
+
+      assert_receive_event WithdrawalStatCreated, fn event ->
+        assert event.account_number == account.account_number
+        assert event.withdrawal_stat_uuid == account.uuid
+      end
+
+      refute stat == nil
+      assert stat.account_number == account.account_number
+    end
+
+    @tag :integration
+    test "should be updated when a withdrawal is made" do
+      params = build(:account, initial_balance: 1000.0)
+      assert {:ok, %Account{account_number: account_number} = account} = Accounts.create_account(params)
+      {:ok, account} = Accounts.withdraw(account, %{amount: 500, where: "branch"})
+      {:ok, account} = Accounts.withdraw(account, %{amount: 500, where: "atm"})
+
+      stat = Accounts.withdrawal_stats_by_account_number(account_number)
+
+      assert_receive_event AtmCountIncreased, fn event ->
+        assert event.count == 1
+        assert event.withdrawal_stat_uuid == account.uuid
+      end
+
+      assert_receive_event BranchCountIncreased, fn event ->
+        assert event.count == 1
+        assert event.withdrawal_stat_uuid == account.uuid
+      end
+
+      refute stat == nil
+      assert stat.atm == 1
+      assert stat.branch == 1
+    end
+  end
 end

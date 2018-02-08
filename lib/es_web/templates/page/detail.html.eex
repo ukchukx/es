@@ -36,6 +36,19 @@
 			</div>
 		</div>
 		<% end %>
+		<%= if nil != @withdrawal_stats do %>
+		<div class="row mb-3">
+			<div class="col-sm-12">
+				<div class="card">
+		      <div class="card-body">
+		      	<h3 class="card-title">Withdrawal stats</h3>
+		      	<h5 class="card-text">ATM: <%= @withdrawal_stats.atm %></h5>
+		      	<h5 class="card-text">Branch: <%= @withdrawal_stats.branch %></h5>
+		      </div>
+		    </div>
+			</div>
+		</div>
+		<% end %>
 	</div>
 	
 </div>

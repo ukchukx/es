@@ -56,16 +56,20 @@ defmodule EsWeb.PageController do
   		  %{account_number: a} -> a
   		  _ -> nil
   		end
+
+  	withdrawal_stats = Accounts.withdrawal_stats_by_account_number(account)
     render conn, "detail.html", 
     	accounts: accounts, 
     	selected: selected, 
-    	number: number
+    	number: number,
+    	withdrawal_stats: withdrawal_stats
   end
 
   def detail(conn, _params) do
     render conn, "detail.html", 
     	accounts: [], 
     	selected: nil, 
-    	number: nil
+    	number: nil,
+    	withdrawal_stats: nil
   end
 end

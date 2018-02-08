@@ -16,6 +16,7 @@ defmodule Es.Application do
       supervisor(Es.Accounts.Supervisor, []),
       # Enforce unique constraints
       worker(Es.Support.Unique, []),
+      worker(Es.Support.Cache, []),
       # Start your own worker by calling: Es.Worker.start_link(arg1, arg2, arg3)
       # worker(Es.Worker, [arg1, arg2, arg3]),
     ]

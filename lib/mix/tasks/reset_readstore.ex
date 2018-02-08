@@ -43,6 +43,7 @@ defmodule Mix.Tasks.Es.Reset do
     """
     TRUNCATE TABLE
       accounts,
+      withdrawal_stats,
       projection_versions
     RESTART IDENTITY;
     """
