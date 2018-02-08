@@ -50,5 +50,30 @@
 		</div>
 		<% end %>
 	</div>
+	<div class="col-md-6 col-sm-12">
+		<%= if nil != @account_statement do %>
+		<ul class="list-group list-group-flush">
+			<%= for as <- @account_statement.transactions do %>
+				<%= if as["type"] == "deposit" do %>
+				<a href="#" class="list-group-item list-group-item-action flex-column align-items-start  list-group-item-success">
+			    <div class="d-flex w-100 justify-content-between">
+			      <h5 class="mb-1">&#8358; <%= as["amount"] %></h5>
+			      <small class="timestamp"><%= as["timestamp"] %></small>
+			    </div>
+			    <small class="text-muted">deposit</small>
+			  </a>
+				<% else %>
+			  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start  list-group-item-danger">
+			    <div class="d-flex w-100 justify-content-between">
+			      <h5 class="mb-1">&#8358; <%= as["amount"] %></h5>
+			      <small class="timestamp"><%= as["timestamp"] %></small>
+			    </div>
+			    <small class="text-muted">withdrawal</small>
+			  </a>
+				<% end %>
+		  <% end %>
+		</ul>
+		<% end %>
+	</div>
 	
 </div>

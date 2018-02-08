@@ -123,4 +123,69 @@ defmodule Es.AccountsTest do
       assert stat.branch == 1
     end
   end
+
+  describe "account statement" do
+    @tag :integration
+    test "should be created when account is created" do
+      params = build(:account)
+      assert {:ok, %Account{} = account} = Accounts.create_account(params)
+
+      as = Accounts.account_statement_by_account_number(account.account_number)
+
+      assert_receive_event AccountStatementCreated, fn event ->
+        assert event.account_number == account.account_number
+        assert event.account_statement_uuid == account.uuid
+        assert event.transactions == []
+      end
+
+      refute as == nil
+      assert as.account_number == account.account_number
+    end
+
+    @tag :integration
+    test "should be updated when a withdrawal is made" do
+      params = build(:account, initial_balance: 1000.0)
+      assert {:ok, %Account{account_number: account_number} = account} = Accounts.create_account(params)
+      {:ok, account} = Accounts.withdraw(account, %{amount: 500, where: "branch"})
+
+      as = Accounts.account_statement_by_account_number(account_number)
+
+      assert_receive_event AccountStatementTransactionAdded, fn event ->
+        %{timestamp: ts} = event
+
+        assert is_integer(ts)
+        assert event.transaction == %{"amount" => 500, "type" => "withdrawal"}
+        assert event.account_statement_uuid == account.uuid
+      end
+
+      refute as == nil
+      map = Enum.at(as.transactions, 0)
+      assert Map.has_key?(map, "timestamp")
+      assert Map.get(map, "amount") == 500
+      assert Map.get(map, "type") == "withdrawal"
+    end
+
+    @tag :integration
+    test "should be updated when a deposit is made" do
+      params = build(:account, initial_balance: 1000.0)
+      assert {:ok, %Account{account_number: account_number} = account} = Accounts.create_account(params)
+      {:ok, account} = Accounts.deposit(account, %{amount: 500})
+
+      as = Accounts.account_statement_by_account_number(account_number)
+
+      assert_receive_event AccountStatementTransactionAdded, fn event ->
+        %{timestamp: ts} = event
+
+        assert is_integer(ts)
+        assert event.transaction == %{"amount" => 500, "type" => "deposit"}
+        assert event.account_statement_uuid == account.uuid
+      end
+
+      refute as == nil
+      map = Enum.at(as.transactions, 0)
+      assert Map.has_key?(map, "timestamp")
+      assert Map.get(map, "amount") == 500
+      assert Map.get(map, "type") == "deposit"
+    end
+  end
 end

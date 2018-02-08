@@ -11,6 +11,7 @@ defmodule Es.Accounts.Supervisor do
     Supervisor.init([
       Accounts.Projectors.Account,
       Accounts.Projectors.WithdrawalStat,
+      Accounts.Projectors.AccountStatement,
       Accounts.Workflows.CreateResourcesFromAccount,
       Accounts.Workflows.HandleDepositsAndWithdrawals
     ], strategy: :one_for_one)

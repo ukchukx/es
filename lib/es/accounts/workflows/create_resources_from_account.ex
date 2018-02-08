@@ -29,6 +29,17 @@ defmodule Es.Accounts.Workflows.CreateResourcesFromAccount do
             end
           _ -> :ok
         end
+
+        case Accounts.account_statement_by_account_number(an) do
+          nil ->
+            attrs = %{account_statement_uuid: uuid, account_number: an}
+            with {:ok, _as} <- Accounts.create_account_statement(attrs, opts) do
+              :ok
+            else
+              reply -> reply
+            end
+          _ -> :ok            
+        end
     end
   end
 

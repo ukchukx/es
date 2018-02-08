@@ -10,7 +10,7 @@ defmodule EsWeb.PageController do
   def handle_command(conn, %{ "command" => %{"type" => "create_account", "account_number" => an, "name" => n, "initial_balance" => ib}}) do
     {ib, _} = Float.parse(ib)
 
-    with {:ok, account} <- Accounts.create_account(%{account_number: an, initial_balance: ib, name: n}) do
+    with {:ok, _account} <- Accounts.create_account(%{account_number: an, initial_balance: ib, name: n}) do
     	redirect(conn, to: page_path(conn, :index))
     end
   end
@@ -58,11 +58,14 @@ defmodule EsWeb.PageController do
   		end
 
   	withdrawal_stats = Accounts.withdrawal_stats_by_account_number(account)
+  	account_statement = Accounts.account_statement_by_account_number(account)
+
     render conn, "detail.html", 
     	accounts: accounts, 
     	selected: selected, 
     	number: number,
-    	withdrawal_stats: withdrawal_stats
+    	withdrawal_stats: withdrawal_stats,
+    	account_statement: account_statement
   end
 
   def detail(conn, _params) do
@@ -70,6 +73,7 @@ defmodule EsWeb.PageController do
     	accounts: [], 
     	selected: nil, 
     	number: nil,
-    	withdrawal_stats: nil
+    	withdrawal_stats: nil,
+    	account_statement: nil
   end
 end

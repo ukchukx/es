@@ -9,13 +9,16 @@ defmodule Es.Accounts do
     CreateWithdrawalStat,
     IncreaseAtmCount,
     IncreaseBranchCount,
+    CreateAccountStatement,
+    AddAccountStatementTransaction
   }
 
   alias Es.Accounts.Queries.{
     AccountByNumber,
+    AccountStatementByNumber,
     WithdrawalStatsByAccountNumber
   }
-  alias Es.Accounts.Projections.{Account,WithdrawalStat}
+  alias Es.Accounts.Projections.{Account,WithdrawalStat,AccountStatement}
   alias Es.{Repo,Router}
 
   @doc """
@@ -125,6 +128,43 @@ defmodule Es.Accounts do
   end
 
   def list_withdrawal_stats, do: Repo.all(WithdrawalStat)
+
+  @doc """
+  Create a new account statement.
+  """
+  def create_account_statement(%{account_statement_uuid: uuid} = attrs, opts \\ []) do
+    opts = opts ++ [consistency: :strong]
+    command = CreateAccountStatement.new(attrs)
+
+    with :ok <- Router.dispatch(command, opts) do
+      get(AccountStatement, uuid)
+    else
+      reply -> reply
+    end
+  end
+
+  @doc """
+  Add a new account statement transaction.
+  """
+  def add_account_statement_transaction(%{account_statement_uuid: uuid} = attrs, opts \\ []) do
+    opts = opts ++ [consistency: :strong]
+    command = AddAccountStatementTransaction.new(attrs)
+
+    with :ok <- Router.dispatch(command, opts) do
+      get(AccountStatement, uuid)
+    else
+      reply -> reply
+    end
+  end
+
+  def account_statement_by_account_number(account_number) do
+    account_number
+    |> AccountStatementByNumber.new
+    |> Repo.one
+  end
+
+  def list_account_statements, do: Repo.all(AccountStatement)
+
   defp get(schema, uuid) do
     case Repo.get(schema, uuid) do
       nil -> {:error, :not_found}

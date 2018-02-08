@@ -33,6 +33,7 @@ defmodule Es.Storage do
     """
     TRUNCATE TABLE
       accounts,
+      account_statements,
       withdrawal_stats,
       projection_versions
     RESTART IDENTITY;
