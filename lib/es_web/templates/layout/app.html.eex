@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Uk Chukundah">
+
+    <title>Es Bank</title>
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+  </head>
+
+  <body data-js-view-name="<%= js_view_name(@conn, @view_template) %>">
+    <div class="container-fluid">
+      <nav class="navbar">
+        <a class="navbar-brand" href="<%= page_path(@conn, :index) %>">
+          <img src="/images/phoenix.png" width="350" height="60" alt="">
+        </a>
+        <ul class="nav navbar-nav mr-auto">
+          <li><a href="<%= page_path(@conn, :detail) %>">Details</a></li>
+        </ul>
+      </nav>
+      <main role="main">
+        <%= render @view_module, @view_template, assigns %>
+      </main>
+
+    </div> <!-- /container -->
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+  </body>
+</html>

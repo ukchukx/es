@@ -1,0 +1,72 @@
+<div class="row mt-3">
+  <div class="col-md-4 col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Create account</h5>
+        <%= form_for @conn, page_path(@conn, :handle_command), [as: :command, id: "create-form", class: "form"], fn _f -> %>
+          <input type="hidden" name="command[type]" value="create_account">
+          <div class="form-group row ">
+            <input type="text" class="form-control" name="command[name]" placeholder="Account name">
+          </div>
+          <div class="form-group row ">
+            <input type="text" class="form-control" name="command[account_number]" placeholder="Account number">
+          </div>
+          <div class="form-group row">
+            <input type="number" class="form-control" name="command[initial_balance]" placeholder="Initial balance" value="10000">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Create</button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Deposit</h5>
+        <%= form_for @conn, page_path(@conn, :handle_command), [as: :command, id: "deposit-form", class: "form"], fn _f -> %>
+          <input type="hidden" name="command[type]" value="deposit">
+          <div class="form-group row">
+            <select name="command[account_number]" class="form-control" required>
+              <option value="">Select account</option>
+              <%= for %{account_number: account_number, name: name} <- @accounts do %>
+                <option value="<%= account_number %>"><%= name %></option>
+              <% end %>
+            </select>
+          </div>
+          <div class="form-group row">
+            <input type="number" class="form-control" name="command[amount]" placeholder="Amount" value="1000">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Deposit</button>
+        <% end %>
+      </div>
+    </div>    
+  </div>
+  <div class="col-md-4 col-sm-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Withdraw</h5>
+        <%= form_for @conn, page_path(@conn, :handle_command), [as: :command, id: "withdraw-form", class: "form"], fn _f -> %>
+          <input type="hidden" name="command[type]" value="withdrawal">
+          <div class="form-group row">
+            <select name="command[account_number]" class="form-control" required>
+              <option value="">Select account</option>
+              <%= for %{account_number: account_number, name: name} <- @accounts do %>
+                <option value="<%= account_number %>"><%= name %></option>
+              <% end %>
+            </select>
+          </div>
+          <div class="form-group row">
+            <input type="number" class="form-control" name="command[amount]" placeholder="Amount" value="1000">
+          </div>
+          <div class="form-group row">
+            <select name="command[where]" class="form-control">
+              <option value="branch">Branch</option>
+              <option value="atm">ATM</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Withdraw</button>
+        <% end %>
+      </div>
+    </div>    
+  </div>
+</div>

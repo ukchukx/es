@@ -1,0 +1,40 @@
+<div class="row mt-3">
+	<div class="col-md-6 col-sm-12">
+    <div class="row mb-3">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="form-group row">
+              <select id="account_select" class="form-control" required>
+                <%= if nil == @number do %>
+                <option value="" selected>Select account</option>
+                <% else %>
+                <option value="">Select account</option>
+                <% end %>
+                <%= for %{account_number: account_number, name: name} <- @accounts do %>
+                  <%= if account_number == @number do %>
+                  <option value="<%= account_number %>" selected><%= name %></option>
+                  <% else %>
+                  <option value="<%= account_number %>"><%= name %></option>
+                  <% end %>
+                <% end %>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%= if nil != @selected do %>
+		<div class="row mb-3">
+			<div class="col-sm-12">
+				<div class="card">
+		      <div class="card-body">
+		      	<h3 class="card-title"><%= @selected.name %></h3>
+		      	<h5 class="card-text">&#8358; <%= @selected.balance %></h5>
+		      </div>
+		    </div>
+			</div>
+		</div>
+		<% end %>
+	</div>
+</div>
