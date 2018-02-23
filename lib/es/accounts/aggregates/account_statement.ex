@@ -37,11 +37,11 @@ defmodule Es.Accounts.Aggregates.AccountStatement do
     %AccountStatement{as |
       uuid: created.account_statement_uuid,
       account_number: created.account_number,
-      transactions: MapSet.new()
+      transactions: MapSet.new(created.transactions)
     }
   end
 
-  def apply(%AccountStatement{} = as, %AccountStatementTransactionAdded{transaction: t}) do
-    %AccountStatement{as | transactions: MapSet.put(as.transactions, t)}
+  def apply(%AccountStatement{transactions: transactions} = as, %AccountStatementTransactionAdded{transaction: t}) do
+    %AccountStatement{as | transactions: MapSet.put(transactions, t)}
   end
 end

@@ -1,30 +1,30 @@
-<div class="row">
-	<div class="col">
-		<div class="card">
-      <div class="card-body">
-      	<div class="form-group row">
-          <select id="account_select" class="form-control" required>
-          	<%= if nil == @number do %>
-            <option value="" selected>Select account</option>
-            <% else %>
-            <option value="">Select account</option>
-            <% end %>
-          	<%= for %{account_number: account_number, name: name} <- @accounts do %>
-	            <%= if account_number == @number do %>
-	            <option value="<%= account_number %>" selected><%= name %></option>
-	            <% else %>
-	            <option value="<%= account_number %>"><%= name %></option>
-	            <% end %>
-            <% end %>
-          </select>
+<div class="row mt-3">
+	<div class="col-md-6 col-sm-12">
+    <div class="row mb-3">
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <div class="form-group row">
+              <select id="account_select" class="form-control" required>
+                <%= if nil == @number do %>
+                <option value="" selected>Select account</option>
+                <% else %>
+                <option value="">Select account</option>
+                <% end %>
+                <%= for %{account_number: account_number, name: name} <- @accounts do %>
+                  <%= if account_number == @number do %>
+                  <option value="<%= account_number %>" selected><%= name %></option>
+                  <% else %>
+                  <option value="<%= account_number %>"><%= name %></option>
+                  <% end %>
+                <% end %>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-	</div>
-</div>
-<div class="row mt-3">
-	<div class="col-md-6 col-sm-12">
-		<%= if nil != @selected do %>
+    <%= if nil != @selected do %>
 		<div class="row mb-3">
 			<div class="col-sm-12">
 				<div class="card">
@@ -55,7 +55,7 @@
 		<ul class="list-group list-group-flush">
 			<%= for as <- @account_statement.transactions do %>
 				<%= if as["type"] == "deposit" do %>
-				<a href="#" class="list-group-item list-group-item-action flex-column align-items-start  list-group-item-success">
+				<a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start  list-group-item-success">
 			    <div class="d-flex w-100 justify-content-between">
 			      <h5 class="mb-1">&#8358; <%= as["amount"] %></h5>
 			      <small class="timestamp"><%= as["timestamp"] %></small>
@@ -63,7 +63,7 @@
 			    <small class="text-muted">deposit</small>
 			  </a>
 				<% else %>
-			  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start  list-group-item-danger">
+			  <a href="javascript:;" class="list-group-item list-group-item-action flex-column align-items-start  list-group-item-danger">
 			    <div class="d-flex w-100 justify-content-between">
 			      <h5 class="mb-1">&#8358; <%= as["amount"] %></h5>
 			      <small class="timestamp"><%= as["timestamp"] %></small>
@@ -75,5 +75,4 @@
 		</ul>
 		<% end %>
 	</div>
-	
 </div>

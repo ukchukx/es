@@ -20,7 +20,7 @@ defmodule EsWeb.PageController do
 
     case Accounts.account_by_account_number(an) do
       nil -> nil
-      account -> Accounts.withdraw(account, %{amount: a, where: w})        
+      account -> Accounts.withdraw(account, %{amount: a, where: w})
     end
 
     redirect(conn, to: page_path(conn, :index))
@@ -31,49 +31,35 @@ defmodule EsWeb.PageController do
 
     case Accounts.account_by_account_number(an) do
       nil -> nil
-      account -> Accounts.deposit(account, %{amount: a})        
+      account -> Accounts.deposit(account, %{amount: a})
     end
-    
+
     redirect(conn, to: page_path(conn, :index))
   end
 
-  def detail(conn, %{"account" => account}) do
+  def detail(conn, params) do
+    account = Map.get params, "account"
   	accounts = Accounts.list_accounts()
-  	
-  	selected = Enum.find(accounts, nil, fn 
-  		%{account_number: ^account} -> true 
-  		_ -> false 
-  	end)
 
   	selected = 
-  		case selected do
+      accounts
+      |> Enum.find(fn
+    		%{account_number: ^account} -> true
+    		_ -> false
+    	end)
+    	|> case do
   		  nil -> nil
-  		  _ -> %{selected | balance: :erlang.float_to_binary(selected.balance, [decimals: 2])}
-  		end
-
-  	number = 
-  		case selected do
-  		  %{account_number: a} -> a
-  		  _ -> nil
+  		  selected -> %{selected | balance: :erlang.float_to_binary(selected.balance, [decimals: 2])}
   		end
 
   	withdrawal_stats = Accounts.withdrawal_stats_by_account_number(account)
   	account_statement = Accounts.account_statement_by_account_number(account)
 
-    render conn, "detail.html", 
-    	accounts: accounts, 
-    	selected: selected, 
-    	number: number,
+    render conn, "detail.html",
+    	accounts: accounts,
+    	selected: selected,
+    	number: account,
     	withdrawal_stats: withdrawal_stats,
     	account_statement: account_statement
-  end
-
-  def detail(conn, _params) do
-    render conn, "detail.html", 
-    	accounts: [], 
-    	selected: nil, 
-    	number: nil,
-    	withdrawal_stats: nil,
-    	account_statement: nil
   end
 end

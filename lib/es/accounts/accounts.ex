@@ -108,7 +108,7 @@ defmodule Es.Accounts do
   def update_withdrawal_stat(%{withdrawal_stat_uuid: uuid, type: type} = attrs, opts \\ []) do
     opts = opts ++ [consistency: :strong]
 
-    command = 
+    command =
       case type do
         "atm" -> IncreaseAtmCount.new(attrs)
         "branch" -> IncreaseBranchCount.new(attrs)
@@ -120,6 +120,8 @@ defmodule Es.Accounts do
       reply -> reply
     end
   end
+
+  def withdrawal_stats_by_account_number(account_number) when is_nil(account_number), do: nil
 
   def withdrawal_stats_by_account_number(account_number) do
     account_number
@@ -156,6 +158,8 @@ defmodule Es.Accounts do
       reply -> reply
     end
   end
+
+  def account_statement_by_account_number(account_number) when is_nil(account_number), do: nil
 
   def account_statement_by_account_number(account_number) do
     account_number
