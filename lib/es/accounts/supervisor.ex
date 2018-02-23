@@ -10,6 +10,10 @@ defmodule Es.Accounts.Supervisor do
   def init(_arg) do
     Supervisor.init([
       Accounts.Projectors.Account,
+      Accounts.Projectors.WithdrawalStat,
+      Accounts.Projectors.AccountStatement,
+      Accounts.Workflows.CreateResourcesFromAccount,
+      Accounts.Workflows.HandleDepositsAndWithdrawals
     ], strategy: :one_for_one)
   end
 end

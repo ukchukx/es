@@ -5,7 +5,10 @@ defmodule Es.Router do
   alias Es.Accounts.Commands.{
   	CreateAccount,
     DepositMoney,
-    WithdrawMoney
+    WithdrawMoney,
+    CreateWithdrawalStat,
+    IncreaseBranchCount,
+    IncreaseAtmCount
   }
   alias Es.Support.Middleware.{Uniqueness,Validate}
 
@@ -13,10 +16,17 @@ defmodule Es.Router do
   middleware Uniqueness
 
   identify Account, by: :account_uuid, prefix: "account-"
-  
+  identify WithdrawalStat, by: :withdrawal_stat_uuid, prefix: "stat-"
+
   dispatch [
     CreateAccount, 
     DepositMoney,
     WithdrawMoney
   ], to: Account
+
+  dispatch [
+    CreateWithdrawalStat,
+    IncreaseAtmCount,
+    IncreaseBranchCount
+  ], to: WithdrawalStat
 end

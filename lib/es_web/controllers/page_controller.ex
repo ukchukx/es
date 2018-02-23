@@ -52,9 +52,12 @@ defmodule EsWeb.PageController do
   		  selected -> %{selected | balance: :erlang.float_to_binary(selected.balance, [decimals: 2])}
   		end
 
+  	withdrawal_stats = Accounts.withdrawal_stats_by_account_number(account)
+
     render conn, "detail.html",
     	accounts: accounts,
     	selected: selected,
-    	number: account
+    	number: account,
+    	withdrawal_stats: withdrawal_stats
   end
 end
