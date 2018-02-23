@@ -53,11 +53,13 @@ defmodule EsWeb.PageController do
   		end
 
   	withdrawal_stats = Accounts.withdrawal_stats_by_account_number(account)
+  	account_statement = Accounts.account_statement_by_account_number(account)
 
     render conn, "detail.html",
     	accounts: accounts,
     	selected: selected,
     	number: account,
-    	withdrawal_stats: withdrawal_stats
+    	withdrawal_stats: withdrawal_stats,
+    	account_statement: account_statement
   end
 end

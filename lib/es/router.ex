@@ -8,7 +8,9 @@ defmodule Es.Router do
     WithdrawMoney,
     CreateWithdrawalStat,
     IncreaseBranchCount,
-    IncreaseAtmCount
+    IncreaseAtmCount,
+    CreateAccountStatement,
+    AddAccountStatementTransaction
   }
   alias Es.Support.Middleware.{Uniqueness,Validate}
 
@@ -17,6 +19,7 @@ defmodule Es.Router do
 
   identify Account, by: :account_uuid, prefix: "account-"
   identify WithdrawalStat, by: :withdrawal_stat_uuid, prefix: "stat-"
+  identify AccountStatement, by: :account_statement_uuid, prefix: "as-"
 
   dispatch [
     CreateAccount, 
@@ -29,4 +32,9 @@ defmodule Es.Router do
     IncreaseAtmCount,
     IncreaseBranchCount
   ], to: WithdrawalStat
+
+  dispatch [
+    CreateAccountStatement,
+    AddAccountStatementTransaction
+  ], to: AccountStatement
 end
